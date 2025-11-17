@@ -49,14 +49,10 @@ def get_llm_res(user_query, sim_embeddings):
 
 # vytvoreni embedding a ulozeni do databaze
 # get_embedding("pandas")
-while True:
-    user_query = input("Ask something:")
-    sim_embeddings = search_similar(convert_embedding(user_query))
-    print(sim_embeddings)
+user_query = input("Ask something:")
+sim_embeddings = search_similar(convert_embedding(user_query))
+print(sim_embeddings)
 
-    print(get_llm_res(user_query, sim_embeddings))
-
-
-
+print(get_llm_res(user_query, sim_embeddings))
 
 
