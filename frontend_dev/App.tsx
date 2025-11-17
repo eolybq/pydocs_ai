@@ -45,7 +45,7 @@ const App: React.FC = () => {
     try {
       // Assuming the backend is running on the same host/port,
       // and is serving the `/api/chat` endpoint.
-      const response = await fetch('/api/chat', {
+      const response = await fetch('http://localhost:8000/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
