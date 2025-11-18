@@ -70,7 +70,3 @@ def get_pages(path):
         pages_list.append(page)
 
     return pages_list
-
-
-if __name__ == "__main__":
-    get_pages("pandas/test")

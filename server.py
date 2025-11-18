@@ -68,6 +68,7 @@ get_embedding("pandas")
 
 
 # # TODO dodělat frontend_dev aby response vypsal jako MD
+# # TODO dodělat dynamický výběr dokumentace - na hodne mistech natvrdo napsano pandas -> mit na to promennou a vybrat asi v UI? nebo nekde v kodu
 # # a oddelat nadpis stranky
 # @app.post("/query")
 # async def main(request: Request):
