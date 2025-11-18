@@ -18,10 +18,11 @@ CHECKPOINT_FILE = "checkpoints.json"
 
 def convert_embedding_batch(contents):
     """Vrátí seznam embeddingů pro celý batch textů"""
+    print(f"CALL convert_embedding_batch, batch_size={len(contents)}, first_hash={hash(contents[0])}")
     response = client.embeddings.create(
         model="text-embedding-qwen3-embedding-8b",
         input=contents,
-        # timeout=120
+        timeout=7200
     )
     return [item.embedding for item in response.data]
 
@@ -67,7 +68,9 @@ def get_embedding(doc_name):
 
     for i in tqdm(range(0, len(chunks_to_process), BATCH_SIZE), desc="Batches"):
         batch = chunks_to_process[i:i+BATCH_SIZE]
-        contents = [c["content"] for c in batch]
+        print(f"PYTHON BATCH index={i + start_index}, size={len(batch)}")
+        # pridavam main title / chunk_title i do content ktery se prevede pak na embdedding aby byly titles i v nem
+        contents = [c["main_title"] + c["chunk_title"] + c["content"] for c in batch]
 
         embeddings = convert_embedding_batch(contents)
 

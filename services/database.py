@@ -10,14 +10,19 @@ HOST = os.getenv("host")
 PORT = os.getenv("port")
 DBNAME = os.getenv("dbname")
 
-DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
+DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require&options=-c statement_timeout=0"
 engine = create_engine(DATABASE_URL)
 
+def _chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
-def save_bulk_embeddings(bulk_embedding_list, doc_name):
+
+def save_bulk_embeddings(bulk_embedding_list, doc_name, db_batch_size=8):
     """
-    Uloží celý batch embeddingů do DB zaráz
-    bulk_emmbedding_list: list slovníků s klíči:
+    Saves embedding to DB in smaller DB batches to avoid conn issuies
+    bulk_emmbedding_list: list of dicts with keys:
         - main_title
         - chunk_title
         - content
@@ -34,7 +39,10 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name):
     """)
 
     with engine.begin() as conn:
-        conn.execute(sql, bulk_embedding_list)
+        for batch in _chunks(bulk_embedding_list, db_batch_size):
+            conn.execute(sql, batch)
+
+    print("")
 
 
 def search_similar(query_embedding, doc_name, k=5):

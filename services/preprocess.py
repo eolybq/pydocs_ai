@@ -11,8 +11,7 @@ def get_chunk(h_tag, main_title, max_len=4000, overlap=500):
     chunk = {
         "main_title": main_title,
         "chunk_title": h_tag.get_text(strip=True),
-        # pridavam main title / title i do content -> ktery se prevede pak na embdedding aby byl title v nem
-        "content": h_tag.get_text(strip=True) + main_title,
+        "content": "",
     }
 
     for tag in h_tag.find_next_siblings():
