@@ -64,6 +64,7 @@ doc_name = "pandas"
 
 
 # vytvoreni embedding a ulozeni do databaze
+# TODO nejaky podivny pocet batches pri ukladani -> 0/44 melo by byt vyssi??? ale logika a prace s novou struc dobre
 get_embedding(doc_name)
 
 
