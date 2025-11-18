@@ -3,12 +3,12 @@ from dotenv import load_dotenv
 import os
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-
 import uvicorn
 
-from services.create_embeddings import convert_embedding, get_embedding
+from services.create_embeddings import convert_embedding_batch, get_embedding
 from services.database import search_similar
 
+load_dotenv()
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -18,12 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-load_dotenv()
-
 client = OpenAI(
     api_key=os.getenv("api_key"),
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
+
 
 def get_llm_res(user_query, sim_embeddings):
     context_str = "\n\n".join(
@@ -60,11 +59,12 @@ def get_llm_res(user_query, sim_embeddings):
     return response.choices[0].message
 
 
+# NOTE Dokumentace s kterou chci pracovat
+doc_name = "pandas"
+
 
 # vytvoreni embedding a ulozeni do databaze
-get_embedding("pandas")
-
-
+get_embedding(doc_name)
 
 
 # # TODO dodělat frontend_dev aby response vypsal jako MD
@@ -74,8 +74,9 @@ get_embedding("pandas")
 # async def main(request: Request):
 #     data = await request.json()
 #     user_query = data.get("prompt")
-#
-#     sim_embeddings = search_similar(convert_embedding(user_query))
+# # TODO zkontrtolovat zdali funguje s novou convert embedding_batch funcki misto conver embedding - umele prevadim na list a pak beru prvni prvek
+#     query_emb = convert_embedding_batch([user_query])[0]
+#     sim_embeddings = search_similar(query_emb, doc_name)
 #     print(sim_embeddings)
 #     out_data = get_llm_res(user_query, sim_embeddings)
 #     print(out_data)

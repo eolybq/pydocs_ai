@@ -14,30 +14,40 @@ DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?
 engine = create_engine(DATABASE_URL)
 
 
-def save_embedding(embedding):
+def save_bulk_embeddings(bulk_embedding_list, doc_name):
+    """
+    Uloží celý batch embeddingů do DB zaráz
+    bulk_emmbedding_list: list slovníků s klíči:
+        - main_title
+        - chunk_title
+        - content
+        - embedding
+    """
+    if not bulk_embedding_list:
+        return
+
+    table_name = f"rag_docs.{doc_name}"
+
+    # TODO zmenit tabulku na {table_name}  -> urcuje se v server.py tabulka
+    sql = text(f"""
+        INSERT INTO rag_docs.test (main_title, chunk_title, embedding, content)
+        VALUES (:main_title, :chunk_title, :embedding, :content)
+    """)
+
     with engine.begin() as conn:
-        embedding_vector = embedding["embedding"]
-        sql = text("""
-            INSERT INTO rag_docs.pandas (main_title, chunk_title, embedding, content)
-            VALUES (:main_title, :chunk_title, :embedding, :content)
-        """)
-
-        conn.execute(sql, {
-            "main_title": embedding["main_title"],
-            "chunk_title": embedding["chunk_title"],
-            "content": embedding["content"],
-            "embedding": embedding_vector
-        })
+        conn.execute(sql, bulk_embedding_list)
 
 
-def search_similar(query_embedding, k=5):
+def search_similar(query_embedding, doc_name, k=5):
+    table_name = f"rag_docs.{doc_name}"
     vec_string = "[" + ",".join(map(str, query_embedding)) + "]"
-    sql = text("""
+
+    sql = text(f"""
         SELECT
             main_title,
             chunk_title,
             content
-        FROM rag_docs.pandas
+        FROM {table_name}
         ORDER BY (embedding <-> :embedding) asc
         LIMIT :k;
     """)
