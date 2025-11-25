@@ -99,6 +99,7 @@ async def create_em_db(background: BackgroundTasks, file: UploadFile = File(...)
     create_table(doc_name)
 
     # vytvoreni embedding a ulozeni do databaze
+    # TODO zjistit zdali funguje a spravne - api nedostava runtime error
     background.add_task(run_embedding_pipeline, doc_name)
 
     return {
