@@ -9,6 +9,7 @@ import os
 from services.create_embeddings import convert_embedding_batch, get_embedding
 from services.database import search_similar, create_table, get_tables
 
+
 load_dotenv()
 app = FastAPI()
 app.add_middleware(
