@@ -9,18 +9,22 @@ from services.preprocess import get_chunks_list
 from services.database import save_bulk_embeddings
 
 load_dotenv()
-IPADRESS = os.getenv("ipadress")
-client = OpenAI(base_url=IPADRESS, api_key="lm-studio")
 
 
-BATCH_SIZE = 64
+BATCH_SIZE = 8
 CHECKPOINT_FILE = "checkpoints.json"
 
 def convert_embedding_batch(contents):
     """Vrátí seznam embeddingů pro celý batch textů"""
+    API_KEY = os.getenv("OPENAI_API_KEY")
+    em_model="text-embedding-3-small"
+
+    client = OpenAI(api_key=API_KEY)
+
+
     print(f"CALL convert_embedding_batch, batch_size={len(contents)}, first_hash={hash(contents[0])}")
     response = client.embeddings.create(
-        model="text-embedding-qwen3-embedding-8b",
+        model=em_model,
         input=contents,
         timeout=7200
     )
@@ -51,7 +55,7 @@ def get_embedding(doc_name):
 
     if not chunks_to_process:
         print(f"No chunks to process in {doc_name}, everything is already embedded")
-        return
+        return {"status": "completed"}
 
     num_batches = ceil(len(chunks_to_process) / BATCH_SIZE)
     print(f"Expected batches: {num_batches}")
@@ -77,5 +81,8 @@ def get_embedding(doc_name):
         # bulk insert do DB
         # TODO a vzit return funkce a poslat vys -> nakonec az userovi ve forme nejake hlasky
         status = save_bulk_embeddings(bulk_data, doc_name, start_index + i)
-        if status.status != "success":
+
+        if status["status"] != "success":
             return status
+
+    return {"status": "completed"}

@@ -35,11 +35,10 @@ def get_chunk(h_tag, main_title, max_len=4000, overlap=500):
 
 def get_chunks_list(path):
     files_list = []
-    base_path = Path("html") / path
-    # TODO zajistit stejne poradi vzdy -> files = sorted(Path("/app/docs").rglob("*.html"))
-    for file in base_path.rglob("*.html"):
-        if str(file) not in ("index.html", "whatsnew.html", "genindex.html", "release.html"):
-            files_list.append(str(file))
+    base_path = Path("data") / path
+    for file in sorted(base_path.rglob("*.html")):
+        if str(file.name) not in ("index.html", "whatsnew.html", "genindex.html", "release.html"):
+            files_list.append(str(file.name))
 
     chunks_list = []
     for file in files_list:

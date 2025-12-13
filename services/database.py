@@ -6,13 +6,13 @@ import time
 
 load_dotenv()
 
-USER = os.getenv("user")
-PASSWORD = os.getenv("password")
-HOST = os.getenv("host")
-PORT = os.getenv("port")
-DBNAME = os.getenv("dbname")
+USER = os.getenv("USER")
+PASSWORD = os.getenv("PASSWORD")
+HOST = os.getenv("HOST")
+PORT = os.getenv("PORT")
+DBNAME = os.getenv("DBNAME")
 
-DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require&options=-c statement_timeout=0"
+DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
 engine = create_engine(DATABASE_URL)
 
 CHECKPOINT_FILE = "checkpoints.json"
@@ -27,7 +27,7 @@ def create_table(doc_name):
             main_title TEXT NOT NULL,
             chunk_title TEXT NOT NULL,
             content TEXT,
-            embedding extensions.vector(4096)
+            embedding extensions.vector(1536)
         );
     """)
 
@@ -35,9 +35,9 @@ def create_table(doc_name):
         with engine.begin() as conn:
             conn.execute(text("CREATE SCHEMA IF NOT EXISTS rag_docs;"))
             conn.execute(sql)
-        print(f"Table {table_name} checked/created successfully.")
+        return {"status": "success"}
     except Exception as e:
-        print(f"Error creating table {table_name}: {e}")
+        return {"status": "error", "error": f"Error creating table {table_name}: {e}"}
 
 
 def get_tables():
@@ -79,7 +79,7 @@ def save_checkpoint(doc_name, last_index):
     with open(CHECKPOINT_FILE, "w") as f:
         json.dump(data, f)
 
-def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_size=32, max_attempts=3):
+def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_size=4, max_attempts=3):
     """
     Saves embedding to DB in smaller DB batches to avoid conn issuies
     bulk_emmbedding_list: list of dicts with keys:
@@ -89,7 +89,7 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_si
         - embedding
     """
     if not bulk_embedding_list:
-        return {"status": "empty_list"}
+        return {"status": "error", "error": "Empty bulk_embedding_list"}
 
     table_name = f"rag_docs.{doc_name}"
     sql = text(f"""

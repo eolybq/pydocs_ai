@@ -1,13 +1,12 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, UploadFile, File, BackgroundTasks
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-import zipfile
 import os
 
-from services.create_embeddings import convert_embedding_batch, get_embedding
-from services.database import search_similar, create_table, get_tables
+from services.create_embeddings import convert_embedding_batch
+from services.database import search_similar, get_tables
 
 load_dotenv()
 app = FastAPI()
@@ -20,11 +19,10 @@ app.add_middleware(
 )
 
 client = OpenAI(
-    api_key=os.getenv("api_key"),
+    api_key=os.getenv("CHAT_API_KEY"),
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
-UPLOAD_DIR = "tmp"
 
 
 def get_llm_res(user_query, sim_embeddings):
@@ -62,63 +60,24 @@ def get_llm_res(user_query, sim_embeddings):
     return response.choices[0].message
 
 
-def run_embedding_pipeline(doc_name):
-    status = get_embedding(doc_name)
-    return status
 
-
+# TODO dodělat dynamický výběr dokumentace -  vybrat asi v UI? nebo nekde v kodu
 @app.get("/get_tables")
 async def get_all_tables():
     tables = get_tables()
     return tables
 
-# Unzip a nahrani zip souboru a prevod na embedding
-@app.post("/create_em_db")
-async def create_em_db(background: BackgroundTasks, file: UploadFile = File(...)):
-    """
-    uložit ZIP do tmp složky
-    rozbalit ZIP
-    projít všechny HTML soubory → get_chunks_list
-    uložit do DB přes save_bulk_embeddings
-    """
-    print("Filename:", file.filename)
-    print("Content type:", file.content_type)
-
-    # zajistí, že složka existuje
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-    doc_name = file.filename.rsplit(".", 1)[0]
-
-    extract_dir = os.path.join(UPLOAD_DIR, doc_name)
-    os.makedirs(extract_dir, exist_ok=True)
-
-    # rozbalení ZIPu přímo z in-memory streamu
-    with zipfile.ZipFile(file.file) as zip_ref:
-        zip_ref.extractall(extract_dir)
-
-    # vytvoreni prislusne db v schema rag_docs
-    create_table(doc_name)
-
-    # vytvoreni embedding a ulozeni do databaze
-    # TODO zjistit zdali funguje a spravne - api nedostava runtime error
-    background.add_task(run_embedding_pipeline, doc_name)
-
-    return {
-        "status": "ok",
-        "extracted_to": extract_dir,
-        "file_count": len(os.listdir(extract_dir))
-    }
-
-
-# TODO dodělat dynamický výběr dokumentace -  vybrat asi v UI? nebo nekde v kodu
 
 @app.post("/query")
 async def get_response(request: Request):
     data = await request.json()
     user_query = data.get("prompt")
     doc_name = data.get("doc_name")
+    # NOTE Mozna napsat na tvrdo idk
+    embedd_model = data.get("embedd_model")
+
 # TODO zkontrtolovat zdali funguje s novou convert embedding_batch funcki misto conver embedding - umele prevadim na list a pak beru prvni prvek
-    query_emb = convert_embedding_batch([user_query])[0]
+    query_emb = convert_embedding_batch([user_query], embedd_model=embedd_model)[0]
     # TODO vzit return status funkce a poslat vys -> nakonec az userovi  ve forme nejake hlasky
     sim_embeddings = search_similar(query_emb, doc_name).results
     print(sim_embeddings)
