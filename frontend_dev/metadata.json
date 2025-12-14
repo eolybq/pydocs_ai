@@ -1,5 +1,0 @@
-
-{
-  "name": "RAG Chat AI",
-  "description": "A user interface for chatting with a RAG-powered AI backend. The user provides input, which is sent to a server that uses a RAG system to generate a context-aware response from a large language model."
-}
