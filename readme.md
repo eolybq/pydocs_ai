@@ -27,6 +27,7 @@ Project created in collaboration with my [brother](https://github.com/SwytDrymz)
 - text-embedding-3-large 3072 dim
 - React (Vite)
 
-# Screenshots
+# Screenshots demo
 ![Screen1](assets/screen1.png)
 ![Screen2](assets/screen2.png)
+![Screen3](assets/screen3.png)
