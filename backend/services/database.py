@@ -53,7 +53,7 @@ def get_tables():
     try:
         with engine.begin() as conn:
             result = conn.execute(sql).fetchall()
-            tables = [row for row in result[0]]
+            tables = [row[0] for row in result]
     except Exception as e:
         print("Error getting tables: ", e)
         return {"status": "error", "error": str(e)}

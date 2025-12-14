@@ -12,6 +12,7 @@ load_dotenv()
 
 origins = [
     "http://localhost:8080",
+    "http://localhost:3000",
     "https://docs-rag-chat-bot.onrender.com",
 ]
 
@@ -84,9 +85,9 @@ async def get_response(request: Request):
     query_emb = convert_embedding_batch([user_query])[0]
     # TODO vzit return status funkce a poslat vys -> nakonec az userovi  ve forme nejake hlasky
     sim_embeddings = search_similar(query_emb, doc_name).get("results", [])
-    print(sim_embeddings)
+    # print(sim_embeddings)
     out_data = get_llm_res(user_query, sim_embeddings)
-    print(out_data)
+    # print(out_data)
 
     return {"response": out_data.content}
 
