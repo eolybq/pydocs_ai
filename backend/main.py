@@ -1,6 +1,8 @@
 from argparse import ArgumentParser
+
 from services.create_embeddings import get_embedding
 from services.database import create_table
+
 
 def run_embedding_pipeline():
     parser = ArgumentParser()
