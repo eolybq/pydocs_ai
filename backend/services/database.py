@@ -19,7 +19,7 @@ CHECKPOINT_FILE = "checkpoints.json"
 
 
 def create_table(doc_name):
-    table_name = f"rag_docs.{doc_name}"
+    table_name = f"{doc_name}"
 
     sql = text(f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
@@ -33,7 +33,6 @@ def create_table(doc_name):
 
     try:
         with engine.begin() as conn:
-            conn.execute(text("CREATE SCHEMA IF NOT EXISTS rag_docs;"))
             conn.execute(sql)
         return {"status": "success"}
     except Exception as e:
@@ -47,7 +46,7 @@ def get_tables():
         FROM
             information_schema.tables
         WHERE
-            table_schema = 'rag_docs';
+            table_schema = 'public';
     """)
 
     try:
@@ -91,7 +90,7 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_si
     if not bulk_embedding_list:
         return {"status": "error", "error": "Empty bulk_embedding_list"}
 
-    table_name = f"rag_docs.{doc_name}"
+    table_name = f"{doc_name}"
     sql = text(f"""
         INSERT INTO {table_name} (main_title, chunk_title, embedding, content)
         VALUES (:main_title, :chunk_title, :embedding, :content)
@@ -124,7 +123,7 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_si
 
 
 def search_similar(query_embedding, doc_name, k=3):
-    table_name = f"rag_docs.{doc_name}"
+    table_name = f"{doc_name}"
     vec_string = "[" + ",".join(map(str, query_embedding)) + "]"
 
     sql = text(f"""
@@ -163,7 +162,7 @@ if __name__ == "__main__":
         "main_title": "Test Title",
         "chunk_title": "Test Chunk",
         "content": "This is some test content.",
-        "embedding": [0.1] * 1536
+        "embedding": [0.1] * 3072
     }],
     "pandas",
     0

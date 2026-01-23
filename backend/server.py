@@ -68,7 +68,6 @@ def get_llm_res(user_query, sim_embeddings):
 
 
 
-# TODO dodělat dynamický výběr dokumentace -  vybrat asi v UI? nebo nekde v kodu
 @app.get("/get_tables")
 async def get_all_tables():
     tables = get_tables()
@@ -81,7 +80,6 @@ async def get_response(request: Request):
     user_query = data.get("prompt")
     doc_name = data.get("doc_name")
 
-# TODO zkontrtolovat zdali funguje s novou convert embedding_batch funcki misto conver embedding - umele prevadim na list a pak beru prvni prvek
     query_emb = convert_embedding_batch([user_query])[0]
     # TODO vzit return status funkce a poslat vys -> nakonec az userovi  ve forme nejake hlasky
     sim_embeddings = search_similar(query_emb, doc_name).get("results", [])
