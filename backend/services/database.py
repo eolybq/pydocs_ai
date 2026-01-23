@@ -132,7 +132,7 @@ def search_similar(query_embedding, doc_name, k=3):
             chunk_title,
             content
         FROM {table_name}
-        ORDER BY (embedding <-> :embedding) asc
+        ORDER BY (embedding <-> :embedding::vector) asc
         LIMIT :k;
     """)
 
