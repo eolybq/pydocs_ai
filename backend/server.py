@@ -38,9 +38,10 @@ def get_llm_res(user_query, sim_embeddings):
     )
 
     prompt = f"""
-        Use ONLY the following context to answer the question.
+        Use ONLY the following CONTEXT to answer the QUESTION.
         Provide exact code examples in blocks if possible.
         If something is not in the context, say "I don't know, this topic doesnt't appear in documentation.".
+        Use structured output in Markdown.
 
         CONTEXT:
         {context_str}
