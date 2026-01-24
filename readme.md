@@ -65,9 +65,9 @@ Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performan
 The frontend provides a seamless experience for selecting documentation sources and receiving grounded answers.
 
 <div align="center">
-  <img src="assets/screen1.png" width="80%" alt="Chat Interface" />
-  <img src="assets/screen2.png" width="80%" alt="Response Example" />
-  <img src="assets/screen3.png" width="80%" alt="Response Example" />
+  <img src="assets/screen1.png" width="100%" alt="Chat Interface" />
+  <img src="assets/screen2.png" width="100%" alt="Response Example" />
+  <img src="assets/screen3.png" width="100% alt="Response Example" />
 </div>
 
 ---
