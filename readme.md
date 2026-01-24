@@ -1,5 +1,6 @@
 # RAG Documentation Chatbot: Python libraries expert
 App is **live** on Render at https://docs-rag-chat-bot.onrender.com
+- server has a cold-start (15-40 sec) because of using Render free tier. Therefore UI won't show any documentation to select from until the API server is running.
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
