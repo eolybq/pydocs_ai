@@ -11,7 +11,7 @@ from services.database import search_similar, get_tables
 load_dotenv()
 
 origins = [
-    "http://localhost:8080",
+    "http://localhost:8000",
     "http://localhost:3000",
     "https://docs-rag-chat-bot.onrender.com",
 ]
@@ -30,7 +30,6 @@ client = OpenAI(
 )
 
 
-
 def get_llm_res(user_query, sim_embeddings):
     context_str = "\n\n".join(
         f"<chunk>\nmain_title: {c['main_title']}\nchunk_title: {c['chunk_title']}\ncontent: {c['content']}\n</chunk>"
@@ -38,16 +37,15 @@ def get_llm_res(user_query, sim_embeddings):
     )
 
     prompt = f"""
-        Use ONLY the following CONTEXT to answer the QUESTION.
-        Provide exact code examples in blocks if possible.
-        If something is not in the context, say "I don't know, this topic doesnt't appear in documentation.".
-        Use structured output in Markdown.
+    Please answer the user query based on the following context:
 
-        CONTEXT:
-        {context_str}
+    <context>
+    {context_str}
+    </context>
 
-        QUESTION:
-        {user_query}
+    <query>
+    {user_query}
+    </query>
     """
 
     # models = client.models.list()
@@ -57,16 +55,22 @@ def get_llm_res(user_query, sim_embeddings):
     response = client.chat.completions.create(
         model="gpt-5-nano",
         messages=[
-            {"role": "system", "content": "Answer in English. You are a professional assitant. In every prompt you recive relevant data from RAG system, you use this data to enhance your answer."},
             {
-                "role": "user",
-                "content": prompt
-            }
+                "role": "system",
+                "content": """
+                    Answer in English. You are a professional assistant. In every prompt you recive relevant data from RAG system (<context>), you use this data to enhance your answer to user message (<user_query>).
+                    If <context> doesn't contain anything relevant to QUERY, say : "I cannot answer this based on the provided documentation.".
+                    - If the user asks about a concept not explicitly in the docs (like "Time Series"), apply the library's documented API to that concept using your general knowledge.
+                    - If there is a conflict between your internal knowledge and the <context>, the <context> ALWAYS wins.
+                    Use structured output in Markdown with Headings, Bold, Lists, Tables and Code blocks.
+                    Provide exact code examples in blocks if possible.
+                """,
+            },
+            {"role": "user", "content": prompt},
         ],
     )
 
     return response.choices[0].message
-
 
 
 @app.get("/get_tables")
@@ -93,5 +97,3 @@ async def get_response(request: Request):
 
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
-
-
