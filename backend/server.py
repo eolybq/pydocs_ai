@@ -42,6 +42,7 @@ def get_llm_res(user_query, sim_embeddings):
         Provide exact code examples in blocks if possible.
         If something is not in the context, say "I don't know, this topic doesnt't appear in documentation.".
         Use structured output in Markdown.
+        Don't mention "Based on provided context" like sentences.
 
         CONTEXT:
         {context_str}
