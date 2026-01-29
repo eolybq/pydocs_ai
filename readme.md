@@ -1,4 +1,4 @@
-# RAG Documentation Chatbot: Python libraries expert
+# PyDocs AI: Python libraries expert
 App is **live** on Render at https://docs-rag-chat-bot.onrender.com
 - server has a cold-start (15-40 sec) because of Render free tier policy. Therefore UI will show loading for this period of time, until backend server API's are up and running.
 
