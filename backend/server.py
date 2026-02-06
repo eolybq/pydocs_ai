@@ -75,14 +75,14 @@ def get_llm_res(user_query, sim_embeddings):
 
 
 @app.get("/get_tables")
-async def get_all_tables():
+def get_all_tables():
     tables = get_tables()
     return tables
 
 
 @app.post("/query")
-async def get_response(request: Request):
-    data = await request.json()
+def get_response(request: Request):
+    data = request.json()
     user_query = data.get("prompt")
     doc_name = data.get("doc_name")
 

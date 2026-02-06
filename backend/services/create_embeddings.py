@@ -15,7 +15,6 @@ BATCH_SIZE = 8
 CHECKPOINT_FILE = "checkpoints.json"
 
 def convert_embedding_batch(contents):
-    """Vrátí seznam embeddingů pro celý batch textů"""
     API_KEY = os.getenv("OPENAI_API_KEY")
     em_model="text-embedding-3-large"
 

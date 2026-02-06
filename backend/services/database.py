@@ -63,7 +63,6 @@ def get_tables():
 
 
 def _chunks(l, n):
-    """Yield successive n-sized chunks from l."""
     for i in range(0, len(l), n):
         yield l[i:i + n], i
 
@@ -79,14 +78,6 @@ def save_checkpoint(doc_name, last_index):
         json.dump(data, f)
 
 def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_size=4, max_attempts=3):
-    """
-    Saves embedding to DB in smaller DB batches to avoid conn issuies
-    bulk_emmbedding_list: list of dicts with keys:
-        - main_title
-        - chunk_title
-        - content
-        - embedding
-    """
     if not bulk_embedding_list:
         return {"status": "error", "error": "Empty bulk_embedding_list"}
 
