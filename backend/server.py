@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from openai import OpenAI
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
@@ -24,6 +25,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class Query(BaseModel):
+    prompt: str
+    doc_name: str
+
 
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY"),
@@ -81,12 +88,11 @@ def get_all_tables():
 
 
 @app.post("/query")
-def get_response(request: Request):
-    data = request.json()
-    user_query = data.get("prompt")
-    doc_name = data.get("doc_name")
+def get_response(data: Query):
+    user_query = data.prompt
+    doc_name = data.doc_name
 
-    query_emb = convert_embedding_batch([user_query])[0]
+    query_emb = convert_embedding_batch([user_query], client)[0]
     # TODO vzit return status funkce a poslat vys -> nakonec az userovi  ve forme nejake hlasky
     sim_embeddings = search_similar(query_emb, doc_name).get("results", [])
     # print(sim_embeddings)

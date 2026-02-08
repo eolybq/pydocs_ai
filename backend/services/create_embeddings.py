@@ -14,19 +14,14 @@ load_dotenv()
 BATCH_SIZE = 8
 CHECKPOINT_FILE = "checkpoints.json"
 
-def convert_embedding_batch(contents):
-    API_KEY = os.getenv("OPENAI_API_KEY")
-    em_model="text-embedding-3-large"
 
-    client = OpenAI(api_key=API_KEY)
+def convert_embedding_batch(contents, client):
+    em_model = "text-embedding-3-large"
 
-
-    print(f"CALL convert_embedding_batch, batch_size={len(contents)}, first_hash={hash(contents[0])}")
-    response = client.embeddings.create(
-        model=em_model,
-        input=contents,
-        timeout=7200
+    print(
+        f"CALL convert_embedding_batch, batch_size={len(contents)}, first_hash={hash(contents[0])}"
     )
+    response = client.embeddings.create(model=em_model, input=contents, timeout=7200)
     return [item.embedding for item in response.data]
 
 
@@ -40,9 +35,8 @@ def load_checkpoint(doc_name):
         return {"last_index": -1}
 
 
-
 # Prevod kazdeho chunk na embedding
-def get_embedding(doc_name):
+def get_embedding(doc_name, client):
     chunks_list = get_chunks_list(doc_name)  # flat list chunků
     print(f"Total chunks for {doc_name}: {len(chunks_list)}")
 
@@ -60,22 +54,24 @@ def get_embedding(doc_name):
     print(f"Expected batches: {num_batches}")
 
     for i in tqdm(range(0, len(chunks_to_process), BATCH_SIZE), desc="Batches"):
-        batch = chunks_to_process[i:i+BATCH_SIZE]
+        batch = chunks_to_process[i : i + BATCH_SIZE]
         print(f"PYTHON BATCH index={i + start_index}, size={len(batch)}")
         # pridavam main title / chunk_title i do content ktery se prevede pak na embdedding aby byly titles i v nem
         contents = [c["main_title"] + c["chunk_title"] + c["content"] for c in batch]
 
-        embeddings = convert_embedding_batch(contents)
+        embeddings = convert_embedding_batch(contents, client)
 
         bulk_data = []
         for c, emb in zip(batch, embeddings):
             # dim vektoru: (4096)
-            bulk_data.append({
-                "embedding": emb,
-                "content": c["content"],
-                "main_title": c["main_title"],
-                "chunk_title": c["chunk_title"]
-            })
+            bulk_data.append(
+                {
+                    "embedding": emb,
+                    "content": c["content"],
+                    "main_title": c["main_title"],
+                    "chunk_title": c["chunk_title"],
+                }
+            )
 
         # bulk insert do DB
         # TODO a vzit return funkce a poslat vys -> nakonec az userovi ve forme nejake hlasky

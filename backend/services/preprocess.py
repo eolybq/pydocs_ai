@@ -3,7 +3,9 @@ from pathlib import Path
 
 
 def is_h_tag(tag):
-    return tag.name and tag.name.startswith("h") and tag.name[1].isdigit()  # and tag.name[1] != "1"
+    return (
+        tag.name and tag.name.startswith("h") and tag.name[1].isdigit()
+    )  # and tag.name[1] != "1"
 
 
 # vytvoreni dict chunks s contents a titles chunku
@@ -28,8 +30,8 @@ def get_chunk(h_tag, main_title, max_len=4000, overlap=500):
     for i, start in enumerate(range(0, len(chunk["content"]), step)):
         yield {
             "main_title": chunk["main_title"],
-            "chunk_title": f'{chunk["chunk_title"]} ({i + 1})',
-            "content": chunk["content"][start:start + max_len]
+            "chunk_title": f"{chunk['chunk_title']} ({i + 1})",
+            "content": chunk["content"][start : start + max_len],
         }
 
 
@@ -37,7 +39,12 @@ def get_chunks_list(path):
     files_list = []
     base_path = Path("data") / path
     for file in sorted(base_path.rglob("*.html")):
-        if str(file.name) not in ("index.html", "whatsnew.html", "genindex.html", "release.html"):
+        if str(file.name) not in (
+            "index.html",
+            "whatsnew.html",
+            "genindex.html",
+            "release.html",
+        ):
             files_list.append(file)
 
     chunks_list = []

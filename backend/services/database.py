@@ -12,7 +12,9 @@ HOST = os.getenv("HOST")
 PORT = os.getenv("DB_PORT")
 DBNAME = os.getenv("DBNAME")
 
-DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
+DATABASE_URL = (
+    f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
+)
 engine = create_engine(DATABASE_URL)
 
 CHECKPOINT_FILE = "checkpoints.json"
@@ -60,11 +62,10 @@ def get_tables():
     return {"status": "success", "tables": tables}
 
 
-
-
 def _chunks(l, n):
     for i in range(0, len(l), n):
-        yield l[i:i + n], i
+        yield l[i : i + n], i
+
 
 def save_checkpoint(doc_name, last_index):
     data = {}
@@ -77,7 +78,10 @@ def save_checkpoint(doc_name, last_index):
     with open(CHECKPOINT_FILE, "w") as f:
         json.dump(data, f)
 
-def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_size=4, max_attempts=3):
+
+def save_bulk_embeddings(
+    bulk_embedding_list, doc_name, start_index, db_batch_size=4, max_attempts=3
+):
     if not bulk_embedding_list:
         return {"status": "error", "error": "Empty bulk_embedding_list"}
 
@@ -86,7 +90,6 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_si
         INSERT INTO {table_name} (main_title, chunk_title, embedding, content)
         VALUES (:main_title, :chunk_title, :embedding, :content)
     """)
-
 
     attempt = 0
     while attempt < max_attempts:
@@ -97,7 +100,9 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_si
                     # aktualizace checkpointu
                     save_checkpoint(doc_name, start_index + i + len(batch) - 1)
 
-            print(f'SAVED TO DB {table_name}: \n {[(x.get("main_title"), x.get("chunk_title")) for x in bulk_embedding_list]}')
+            print(
+                f"SAVED TO DB {table_name}: \n {[(x.get('main_title'), x.get('chunk_title')) for x in bulk_embedding_list]}"
+            )
             return {"status": "success"}
 
         except Exception as e:
@@ -109,8 +114,6 @@ def save_bulk_embeddings(bulk_embedding_list, doc_name, start_index, db_batch_si
             else:
                 print("Max retries reached")
                 return {"status": "error", "error": str(e)}
-
-
 
 
 def search_similar(query_embedding, doc_name, k=3):
@@ -129,32 +132,30 @@ def search_similar(query_embedding, doc_name, k=3):
 
     try:
         with engine.begin() as conn:
-            rows = conn.execute(sql, {
-                "embedding": vec_string,
-                "k": k
-            }).fetchall()
+            rows = conn.execute(sql, {"embedding": vec_string, "k": k}).fetchall()
     except Exception as e:
         print(f"Error during search in {table_name}: {e}")
         return {"status": "error", "error": str(e), "results": []}
 
     rows_out = []
     for row in rows:
-        rows_out.append({
-            "main_title": row[0],
-            "chunk_title": row[1],
-            "content": row[2]
-        })
+        rows_out.append(
+            {"main_title": row[0], "chunk_title": row[1], "content": row[2]}
+        )
 
     return {"status": "success", "results": rows_out}
 
 
 if __name__ == "__main__":
-    save_bulk_embeddings([{
-        "main_title": "Test Title",
-        "chunk_title": "Test Chunk",
-        "content": "This is some test content.",
-        "embedding": [0.1] * 3072
-    }],
-    "pandas",
-    0
+    save_bulk_embeddings(
+        [
+            {
+                "main_title": "Test Title",
+                "chunk_title": "Test Chunk",
+                "content": "This is some test content.",
+                "embedding": [0.1] * 3072,
+            }
+        ],
+        "pandas",
+        0,
     )
