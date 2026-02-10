@@ -74,6 +74,7 @@ def get_llm_res(
         4. **Code Examples:** Provide exact code examples in blocks if possible.
             - Ensure code is complete and syntactically correct.
         5. **Format:** Use Markdown (Headers, Bold, Code Blocks). ALWAYS specify the language in code blocks (e.g., ```python).
+        - Don't explicitly mention keywords like <context> or similar runtime notes, as you are professional assistant in production.
     """).strip()
 
     user_prompt = textwrap.dedent(f"""
