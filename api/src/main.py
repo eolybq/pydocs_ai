@@ -70,10 +70,9 @@ def get_llm_res(
            - If the query asks about a general concept (e.g., "Time Series") not explicitly defined but related, apply your relevant general knowledge to relevant parts of the <context> to construct an answer.
            - Do NOT fill in gaps with internal knowledge about specific library methods, parameters, or classes, as APIs may have changed.
         3. **Conflict Resolution:** If internal knowledge conflicts with <context>, the <context> WINS.
-        4. **Tone:** Professional, technical, concise.
-        5. **Code Examples:** Provide exact code examples in blocks if possible.
+        4. **Code Examples:** Provide exact code examples in blocks if possible.
             - Ensure code is complete and syntactically correct.
-        6. **Format:** Use Markdown (Headers, Bold, Code Blocks). ALWAYS specify the language in code blocks (e.g., ```python).
+        5. **Format:** Use Markdown (Headers, Bold, Code Blocks). ALWAYS specify the language in code blocks (e.g., ```python).
     """).strip()
 
     user_prompt = textwrap.dedent(f"""
