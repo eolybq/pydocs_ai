@@ -1,21 +1,25 @@
 # PyDocs AI: Python libraries expert
-App is **live** on Render at https://docs-rag-chat-bot.onrender.com
-- server has a cold-start (15-40 sec) because of Render free tier policy. Therefore UI will show loading for this period of time, until backend server API's are up and running.
+App is **live** on Hugging Face Spaces:
+- **[Frontend](https://yezdata-pydocs-ai.hf.space)**
+- **[API](https://yezdata-pydocs-ai-api/docs.hf.space)**
+
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-412991?logo=openai&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4.1-412991?logo=openai&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=black)](https://yezdata-pydocs-ai.hf.space)
 
-> **Quick Summary:** A full-stack Retrieval-Augmented Generation (RAG) system designed to solve the "hallucination" problem in LLM's repsonses, written from scratch in Python. It ingests raw HTML documentation, creates semantic embeddings, and grounds LLM responses in factual data from libraries like Pandas, NumPy, and Scikit-learn. This allows LLM to have the right context when asked a question about python libraries.
+
+> **Quick Summary:** A full-stack Retrieval-Augmented Generation (RAG) system designed to solve the "hallucination" problem in LLM's responses, written from scratch in Python. It ingests raw HTML documentation, creates semantic embeddings, and grounds LLM responses in factual data from libraries like Pandas, NumPy, and Scikit-learn. This allows the LLM to have the right context when asked a question about Python libraries.
 
 ---
 
 ## 📊 Project Scope: Accuracy through Context
 
-This project contrasts standard LLM usage with a grounded **RAG (Retrieval-Augmented Generation)** pipeline. By retrieving exact documentation snippets before answering, the system minimizes errors and provides reliable code examples. User gets relevant information from documentation with LLM own output and will get more reliable information than with plain LLM usage. 
+This project contrasts standard LLM usage with a grounded **RAG (Retrieval-Augmented Generation)** pipeline. By retrieving exact documentation snippets before answering, the system minimizes errors and provides reliable code examples. Users get relevant information from documentation alongside the LLM's output, resulting in more reliable information than plain LLM usage.
 
 ## 🏆 Key Capabilities
 
@@ -23,8 +27,8 @@ This project contrasts standard LLM usage with a grounded **RAG (Retrieval-Augme
 | :--- | :--- | :--- |
 | **Smart Ingestion** | Context-aware HTML parsing & semantic chunking. | `BeautifulSoup4` |
 | **Vector Search** | High-dimensional similarity search (3072 dim). | `pgvector` (Neon.tech) |
-| **Inference** | Grounded answers using retrieved context. | `GPT-5-nano` |
-| **Frontend** | Responsive, modern chat interface. | `React` + `Tailwind` |
+| **Inference** | Grounded answers using retrieved context. | `GPT-4.1-nano` |
+| **Frontend** | Interactive data-driven chat interface. | `Streamlit` |
 
 ### Currently Supported Docs
 *   **Data Science:** Pandas, NumPy, Scikit-Learn
@@ -35,11 +39,11 @@ This project contrasts standard LLM usage with a grounded **RAG (Retrieval-Augme
 
 ## 🛠️ Engineering Highlights
 
-### 1. Custom Ingestion Pipeline (`embedd_docs.py`)
+### 1. Custom Ingestion Pipeline (`scripts/embedd_docs.py`)
 Standard text splitters often break code blocks or separate headers from their content. This project implements a **semantic ingestion engine**:
 *   **Context Preservation:** Splits HTML pages based on logical sections (Headings `<h1>`-`<h6>`) rather than arbitrary character counts.
 *   **Resiliency:** Implements a checkpoint system (`checkpoints.json`) to handle large datasets and resume interrupted jobs seamlessly.
-*   **Batch Processing:** Optimizes OpenAI API usage with batched embedding requests. Also save data in batches to DB to optimize DB queries.
+*   **Batch Processing:** Optimizes OpenAI API usage with batched embedding requests and bulk inserts to PostgreSQL.
 
 ### 2. High-Fidelity Embeddings (OpenAI)
 The system utilizes OpenAI's **text-embedding-3-large** model for superior semantic understanding.
@@ -53,17 +57,17 @@ Instead of relying on a "Black Box" LLM, the system uses a "Glass Box" retrieval
 3.  **Prompt Injection:** The LLM is forced to use *only* the provided context, ensuring factual accuracy.
 
 ### 4. REST API & Cloud Deployment (FastAPI + Docker)
-Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performance asynchronous handling of concurrent user requests.
-*   **API Design:** Implemented asynchronous endpoints for query processing and documentation management
-*   **Containerization:** The application is **Dockerized**, encapsulating the Python environment and dependencies to ensure "it works on my machine" consistency in the cloud.
-*   **Live Deployment:** Configured for automated deployment on **Render**, creating a publicly accessible endpoint where the React frontend and Python backend communicate seamlessly in a production environment.
+Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performance handling of concurrent user requests.
+*   **API Design:** Implemented endpoints for query processing and documentation management.
+*   **Containerization:** Both API and Frontend are **Dockerized**, ensuring consistency across different environments.
+*   **CI/CD:** Automated deployment to **Hugging Face Spaces** via GitHub Actions.
 
 ---
 
 ## 🔍 Visual Demonstration
 
 ### Interface & Performance
-The frontend provides a seamless experience for selecting documentation sources and receiving grounded answers.
+The Streamlit frontend provides a seamless experience for selecting documentation sources and receiving grounded answers.
 
 <div align="center">
   <img src="assets/screen1.png" width="100%" alt="Chat Interface" />
@@ -74,10 +78,10 @@ The frontend provides a seamless experience for selecting documentation sources 
 ---
 
 ## 💻 Tech Stack
-*   **Backend:** Python 3.12, FastAPI, SQLAlchemy, BeautifulSoup4
-*   **Infrastructure:** PostgreSQL (Neon.tech - pgvector), Docker, Render
+*   **API:** Python 3.12, FastAPI, SQLAlchemy, BeautifulSoup4
+*   **Frontend:** Streamlit
+*   **Infrastructure:** PostgreSQL (Neon.tech - pgvector), Docker, Hugging Face Hub
 *   **AI/ML:** OpenAI API (Embeddings & Chat)
-*   **Frontend:** React (Vite)
 
 ---
 *Created in collaboration with [SwytDrymz](https://github.com/SwytDrymz)*
