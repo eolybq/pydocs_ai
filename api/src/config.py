@@ -35,11 +35,10 @@ BATCH_SIZE = 8
 CHECKPOINT_FILE = "checkpoints.json"
 EMBEDDING_MODEL = "text-embedding-3-large"
 
-LOCAL_FE_URL = "http://localhost:8501"
-
 
 # ENV VARS
 DEPLOY_FE_URL = os.getenv("DEPLOY_FE_URL")
+LOCAL_FE_URL = os.getenv("LOCAL_FE_URL")
 
 DATABASE_URL = os.getenv("DB_URL")
 

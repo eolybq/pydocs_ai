@@ -25,7 +25,8 @@ from services.database import get_tables, search_similar
 load_dotenv()
 setup_logging()
 
-origins = [DEPLOY_FE_URL, LOCAL_FE_URL]
+fe_url = DEPLOY_FE_URL or LOCAL_FE_URL
+origins = [fe_url]
 
 api = FastAPI()
 api.add_middleware(

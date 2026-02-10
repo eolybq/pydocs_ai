@@ -1,11 +1,14 @@
-import streamlit as st
-import requests
 import os
+
+import requests
 from dotenv import load_dotenv
 
+import streamlit as st
 
 load_dotenv()
-API_URL = os.getenv("LOCAL_API_URL")
+DEPLOY_URL = os.getenv("DEPLOY_API_URL")
+LOCAL_URL = os.getenv("LOCAL_API_URL")
+API_URL = DEPLOY_URL or LOCAL_URL
 
 
 def get_docs():
