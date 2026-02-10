@@ -38,7 +38,7 @@ EMBEDDING_MODEL = "text-embedding-3-large"
 
 # ENV VARS
 DEPLOY_FE_URL = os.getenv("DEPLOY_FE_URL")
-LOCAL_FE_URL = os.getenv("LOCAL_FE_URL")
+LOCAL_FE_URL = os.getenv("LOCAL_FE_URL", "http://localhost:8501")
 
 DATABASE_URL = os.getenv("DB_URL")
 
