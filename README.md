@@ -69,7 +69,7 @@ Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performan
 ### Interface & Performance
 The Streamlit frontend provides a seamless experience for selecting documentation sources and receiving grounded answers.
 
-https://github.com/user-attachments/assets/b57a59c8-f660-40d4-9205-f56c00f520b0
+https://github.com/user-attachments/assets/b03dc06d-6c45-4e86-af28-07e97c370987
 
 ---
 
