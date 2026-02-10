@@ -4,7 +4,7 @@ on:
   push:
     branches: [main] 
     paths:
-      - 'frontend/**'
+      - 'streamlit/**'
 
   workflow_dispatch:
 
@@ -28,15 +28,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff pyright pandas-stubs
-          pip install -r frontend/requirements.txt 
+          pip install -r streamlit/requirements.txt 
 
       - name: Ruff Check and Format
         run: |
-          ruff check frontend/
-          ruff format --check --diff frontend/
+          ruff check streamlit/
+          ruff format --check --diff streamlit/
 
       - name: Pyright Type Check
-        run: pyright frontend/
+        run: pyright streamlit/
 
       - name: Push to hub
         env:
@@ -45,13 +45,12 @@ jobs:
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions Bot"
 
-          cp frontend/metadata_hf.md frontend/README.md
-          git add frontend/README.md
+          cp streamlit/metadata_hf.md streamlit/README.md
+          git add streamlit/README.md
           git commit -m "Setup HF Metadata" || echo "No changes to commit"
 
           git remote add space "https://yezdata:$HF_TOKEN@huggingface.co/spaces/yezdata/pydocs-ai"
 
-          git subtree split --prefix frontend -b hf-deploy-branch
+          git subtree split --prefix streamlit -b hf-deploy-branch
           git push space hf-deploy-branch:main --force
           git branch -D hf-deploy-branch
-
