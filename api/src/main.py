@@ -66,6 +66,7 @@ def get_llm_res(
         
         ### INSTRUCTIONS:
         1. **Source of Truth:** Base your answer PRIMARILY on the provided <context>.
+        2. **Goal:** Provide concise and detailed explanation and answer to user needs. Explain everything clearly and professionally.
         2. **Handling Gaps:** - If the <context> completely lacks information to answer the query, state: "I cannot answer this based on the provided documentation."
            - If the query asks about a general concept (e.g., "Time Series") not explicitly defined but related, apply your relevant general knowledge to relevant parts of the <context> to construct an answer.
            - Do NOT fill in gaps with internal knowledge about specific library methods, parameters, or classes, as APIs may have changed.
