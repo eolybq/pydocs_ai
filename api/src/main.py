@@ -2,17 +2,6 @@ import textwrap
 from typing import Generator
 
 import uvicorn
-from config import (
-    DEPLOY_FE_URL,
-    LOCAL_FE_URL,
-    OPENAI_API_KEY,
-    SEARCH_K_EMBEDDINGS,
-    HISTORY_LEN,
-    Chunk,
-    Query,
-    TableList,
-    setup_logging,
-)
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,11 +9,23 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from loguru import logger
 from openai import APIConnectionError, APIError, OpenAI, RateLimitError
 from openai.types.chat import ChatCompletionMessageParam
+
 from services.create_embeddings import convert_embedding_batch
 from services.database import get_tables, search_similar
+from config import (
+    DEPLOY_FE_URL,
+    HISTORY_LEN,
+    LOCAL_FE_URL,
+    OPENAI_API_KEY,
+    SEARCH_K_EMBEDDINGS,
+    Chunk,
+    Query,
+    TableList,
+    setup_logging,
+)
 
-load_dotenv()
 setup_logging()
+load_dotenv()
 
 fe_url = DEPLOY_FE_URL or LOCAL_FE_URL
 origins = [fe_url]

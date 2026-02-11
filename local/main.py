@@ -2,9 +2,9 @@ from argparse import ArgumentParser
 from openai import OpenAI
 from loguru import logger
 
-from api.src.services.create_embeddings import get_docs_embedding
-from api.src.services.database import create_table
-from api.src.config import OPENAI_API_KEY
+from services.create_embeddings import get_docs_embedding
+from services.database import create_table
+from config import OPENAI_API_KEY
 
 client = OpenAI(
     api_key=OPENAI_API_KEY,
