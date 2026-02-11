@@ -22,7 +22,7 @@ def get_docs():
         st.session_state.docs = tables
 
 
-def render_header():
+def render_sidebar():
     if "docs" in st.session_state:
         with st.sidebar:
             st.markdown(
@@ -48,6 +48,9 @@ def render_header():
                 index=None,
                 options=st.session_state.get("docs", None),
             )
+
+            if st.button("New Chat"):
+                st.session_state.messages = []
 
         return option
 

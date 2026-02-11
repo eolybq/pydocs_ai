@@ -7,6 +7,7 @@ from config import (
     LOCAL_FE_URL,
     OPENAI_API_KEY,
     SEARCH_K_EMBEDDINGS,
+    HISTORY_LEN,
     Chunk,
     Query,
     TableList,
@@ -146,7 +147,7 @@ def get_all_tables():
 def get_response(data: Query):
     user_query = data.prompt
     doc_name = data.doc_name
-    context = data.context
+    context = data.context[-HISTORY_LEN:]
 
     logger.debug(context)
 
