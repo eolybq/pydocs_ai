@@ -17,6 +17,12 @@ App is **live** on Hugging Face Spaces:
 
 ---
 
+## 🔍 Visual Demonstration
+
+https://github.com/user-attachments/assets/b03dc06d-6c45-4e86-af28-07e97c370987
+
+---
+
 ## 📊 Project Scope: Accuracy through Context
 
 This project contrasts standard LLM usage with a grounded **RAG (Retrieval-Augmented Generation)** pipeline. By retrieving exact documentation snippets before answering, the system minimizes errors and provides reliable code examples. Users get relevant information from documentation alongside the LLM's output, resulting in more reliable information than plain LLM usage.
@@ -61,15 +67,6 @@ Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performan
 *   **API Design:** Implemented endpoints for query processing and documentation management.
 *   **Containerization:** Both API and Frontend are **Dockerized**, ensuring consistency across different environments.
 *   **CI/CD:** Automated deployment to **Hugging Face Spaces** via GitHub Actions.
-
----
-
-## 🔍 Visual Demonstration
-
-### Interface & Performance
-The Streamlit frontend provides a seamless experience for selecting documentation sources and receiving grounded answers.
-
-https://github.com/user-attachments/assets/b03dc06d-6c45-4e86-af28-07e97c370987
 
 ---
 
