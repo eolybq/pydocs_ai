@@ -12,7 +12,7 @@
 ## 🚀 Try It Live
 Don't just take our word for it. The app is deployed and ready to help you code:
 - **[Frontend](https://yezdata-pydocs-ai.hf.space)**
-- **[API](https://yezdata-pydocs-ai-api.hf.space/docs)**
+- **[API Docs](https://yezdata-pydocs-ai-api.hf.space/docs)**
 
 ---
 
