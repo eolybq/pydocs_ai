@@ -1,4 +1,4 @@
-# PyDocs AI: Python libraries expert
+# 🐍 PyDocs AI: Python libraries expert
 [![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](#)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](#)
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](#)
@@ -7,11 +7,12 @@
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](#)
 [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=black)](https://yezdata-pydocs-ai.hf.space)
 
-App is **live** on Hugging Face Spaces:
+> **Stop guessing parameters. Start coding with confidence.** PyDocs AI is a Retrieval-Augmented Generation (RAG) assistant that grounds LLM responses in the *actual* documentation of your favorite Python libraries. No more invented functions, no more deprecated syntax—just accurate, context-aware answers.
+
+## 🚀 Try It Live
+Don't just take our word for it. The app is deployed and ready to help you code:
 - **[Frontend](https://yezdata-pydocs-ai.hf.space)**
 - **[API](https://yezdata-pydocs-ai-api.hf.space/docs)**
-
-> **Quick Summary:** A full-stack Retrieval-Augmented Generation (RAG) system designed to solve the "hallucination" problem in LLM's responses, written from scratch in Python. It ingests raw HTML documentation, creates semantic embeddings, and grounds LLM responses in factual data from libraries like Pandas, NumPy, and Scikit-learn. This allows the LLM to have the right context when asked a question about Python libraries.
 
 ---
 
@@ -25,25 +26,20 @@ https://github.com/user-attachments/assets/b03dc06d-6c45-4e86-af28-07e97c370987
 
 This project contrasts standard LLM usage with a grounded **RAG (Retrieval-Augmented Generation)** pipeline. By retrieving exact documentation snippets before answering, the system minimizes errors and provides reliable code examples. Users get relevant information from documentation alongside the LLM's output, resulting in more reliable information than plain LLM usage.
 
-## 🏆 Key Capabilities
-
-| Component | Feature | Technology |
-| :--- | :--- | :--- |
-| **Smart Ingestion** | Context-aware HTML parsing & semantic chunking. | `BeautifulSoup4` |
-| **Vector Search** | High-dimensional similarity search (3072 dim). | `pgvector` (Neon.tech) |
-| **Inference** | Grounded answers using retrieved context. | `GPT-4.1-nano` |
-| **Frontend** | Interactive data-driven chat interface. | `Streamlit` |
-
-### Currently Supported Docs
-*   **Data Science:** Pandas, NumPy, Scikit-Learn
-*   **Visualization:** Matplotlib, Seaborn
-*   **Database:** SQLAlchemy
+### 📚 Knowledge Base
+Currently indexed and supported libraries:
+| Category | Libraries |
+| :--- | :--- |
+| Data Science | Pandas NumPy Scikit-Learn |
+| Visualization | Matplotlib Seaborn |
+| Database | SQLAlchemy |
 
 ---
 
-## 🛠️ Engineering Highlights
+## 🛠️ Under the Hood: Why It Works Better
+Standard RAG tutorials often just split text by character count, breaking code blocks and losing context. PyDocs AI takes a **structure-first approach**:
 
-### 1. Custom Ingestion Pipeline (`scripts/embedd_docs.py`)
+### 1. Custom Context-Aware Ingestion Pipeline (`scripts/embedd_docs.py`)
 Standard text splitters often break code blocks or separate headers from their content. This project implements a **semantic ingestion engine**:
 *   **Context Preservation:** Splits HTML pages based on logical sections (Headings `<h1>`-`<h6>`) rather than arbitrary character counts.
 *   **Resiliency:** Implements a checkpoint system (`checkpoints.json`) to handle large datasets and resume interrupted jobs seamlessly.
@@ -71,8 +67,12 @@ Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performan
 ## 💻 Tech Stack
 *   **API:** Python 3.12, FastAPI, SQLAlchemy, BeautifulSoup4
 *   **Frontend:** Streamlit
-*   **Infrastructure:** PostgreSQL (Neon.tech - pgvector), Docker, Hugging Face Hub
+*   **Database:** PostgreSQL + pgvector (Neon.tech)
+*   **Infrastructure:** Docker, CI/CD to Hugging Face Spaces
 *   **AI/ML:** OpenAI API (Embeddings & Chat)
 
 ---
-*Created in collaboration with [SwytDrymz](https://github.com/SwytDrymz)*
+*🤝 Collaboration*
+Built by [Václav Jež]https://github.com/eolybq & [Vojtěch Jež](https://github.com/SwytDrymz).
+
+Star this repo if you found it useful! ⭐
