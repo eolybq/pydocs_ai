@@ -1,9 +1,4 @@
 # PyDocs AI: Python libraries expert
-App is **live** on Hugging Face Spaces:
-- **[Frontend](https://yezdata-pydocs-ai.hf.space)**
-- **[API](https://yezdata-pydocs-ai-api.hf.space/docs)**
-
-
 [![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](#)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](#)
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)](#)
@@ -12,6 +7,9 @@ App is **live** on Hugging Face Spaces:
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](#)
 [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=black)](https://yezdata-pydocs-ai.hf.space)
 
+App is **live** on Hugging Face Spaces:
+- **[Frontend](https://yezdata-pydocs-ai.hf.space)**
+- **[API](https://yezdata-pydocs-ai-api.hf.space/docs)**
 
 > **Quick Summary:** A full-stack Retrieval-Augmented Generation (RAG) system designed to solve the "hallucination" problem in LLM's responses, written from scratch in Python. It ingests raw HTML documentation, creates semantic embeddings, and grounds LLM responses in factual data from libraries like Pandas, NumPy, and Scikit-learn. This allows the LLM to have the right context when asked a question about Python libraries.
 
