@@ -10,7 +10,7 @@ st.set_page_config(
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={"About": "https://github.com/eolybq/pydocs_ai"},
+    menu_items={"About": "https://github.com/yezdata/pydocs_ai"},
 )
 
 

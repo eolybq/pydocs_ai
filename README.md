@@ -11,7 +11,7 @@
 
 ## 🚀 Try It Live
 Don't just take our word for it. The app is deployed and ready to help you code:
-- **[Frontend](https://yezdata-pydocs-ai.hf.space)**
+- **[App (Frontend)](https://yezdata-pydocs-ai.hf.space)**
 - **[API Docs](https://yezdata-pydocs-ai-api.hf.space/docs)**
 
 ---
@@ -73,6 +73,6 @@ Exposed the core RAG logic via a robust FastAPI backend, ensuring high-performan
 
 ---
 *🤝 Collaboration*
-Built by [Václav Jež]https://github.com/eolybq & [Vojtěch Jež](https://github.com/SwytDrymz).
+Built by [Václav Jež](https://github.com/yezdata) & [Vojtěch Jež](https://github.com/SwytDrymz).
 
 Star this repo if you found it useful! ⭐
