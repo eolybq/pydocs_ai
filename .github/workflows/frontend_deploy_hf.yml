@@ -5,6 +5,7 @@ on:
     branches: [main] 
     paths:
       - 'streamlit/**'
+      - 'requirements_streamlit.txt'
 
   workflow_dispatch:
 
@@ -16,7 +17,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          lfs: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,11 +28,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ruff pyright pandas-stubs
-          pip install -r streamlit/requirements.txt 
+          pip install -r requirements_streamlit.txt 
 
       - name: Ruff Check and Format
         run: |
-          ruff check streamlit/
+          ruff check streamlit/ 
           ruff format --check --diff streamlit/
 
       - name: Pyright Type Check
@@ -42,15 +42,20 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git config --global user.email "bot@github.com"
-          git config --global user.name "GitHub Actions Bot"
+          mkdir -p /tmp/hf-deploy
+          mkdir -p /tmp/hf-deploy/streamlit
 
-          cp streamlit/metadata_hf.md streamlit/README.md
-          git add streamlit/README.md
-          git commit -m "Setup HF Metadata" || echo "No changes to commit"
+          cp Dockerfile.frontend /tmp/hf-deploy/Dockerfile
+          cp streamlit/metadata_hf.md /tmp/hf-deploy/README.md
+          cp streamlit/main.py /tmp/hf-deploy/streamlit/
+          cp -r streamlit/frontend /tmp/hf-deploy/streamlit/
+          cp requirements_streamlit.txt /tmp/hf-deploy/requirements_streamlit.txt
 
+          cd /tmp/hf-deploy
+          git init
+          git config user.email "bot@github.com"
+          git config user.name "GitHub Actions Bot"
+          git add .
+          git commit -m "Deploy Frontend to HF Space"
           git remote add space "https://yezdata:$HF_TOKEN@huggingface.co/spaces/yezdata/pydocs-ai"
-
-          git subtree split --prefix streamlit -b hf-deploy-branch
-          git push space hf-deploy-branch:main --force
-          git branch -D hf-deploy-branch
+          git push space main --force

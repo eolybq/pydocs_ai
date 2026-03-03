@@ -6,9 +6,11 @@ from dotenv import load_dotenv
 import streamlit as st
 
 load_dotenv()
-DEPLOY_URL = os.getenv("DEPLOY_API_URL")
-LOCAL_URL = os.getenv("LOCAL_API_URL")
-API_URL = DEPLOY_URL or LOCAL_URL
+
+DEPLOY_API_URL = os.getenv("DEPLOY_API_URL")
+LOCAL_API_URL = os.getenv("LOCAL_API_URL")
+
+API_URL = DEPLOY_API_URL or LOCAL_API_URL
 
 
 def get_docs():
@@ -17,7 +19,6 @@ def get_docs():
             response = requests.get(f"{API_URL}/get_tables", timeout=10)
             response.raise_for_status()
             data = response.json()
-
         tables = data.get("tables")
         st.session_state.docs = tables
 
@@ -26,19 +27,7 @@ def render_sidebar():
     if "docs" in st.session_state:
         with st.sidebar:
             st.markdown(
-                """
-                <style>
-                .gradient-text {
-                    font-weight: bold;
-                    background: -webkit-linear-gradient(left, #ff4b1f, #1fddff);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    display: inline;
-                    font-size: 3em;
-                }
-                </style>
-                <div class="gradient-text">📚 PyDocs AI</div>
-                """,
+                """<style>.gradient-text { font-weight: bold; background: -webkit-linear-gradient(left, #ff4b1f, #1fddff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline; font-size: 3em; }</style><div class="gradient-text">📚 PyDocs AI</div>""",
                 unsafe_allow_html=True,
             )
             option = st.selectbox(
@@ -48,10 +37,8 @@ def render_sidebar():
                 index=None,
                 options=st.session_state.get("docs", None),
             )
-
             if st.button("New Chat"):
                 st.session_state.messages = []
-
         return option
 
 
@@ -63,7 +50,6 @@ def fetch_response(prompt, option, context):
         stream=True,
     ) as response:
         response.raise_for_status()
-
         for chunk in response.iter_content(chunk_size=None):
             if chunk:
                 text = chunk.decode("utf-8")
@@ -74,17 +60,13 @@ def render_chat_ui(option):
     if "messages" not in st.session_state:
         with st.chat_message("assistant"):
             st.write(
-                "Hello! I'am your python libraries AI assistant. Please first :blue[**select a documentation**] from the sidebar dropdown, and then ask me anything from :blue[**that documentation**]."
+                "Hello! I'am your python libraries AI assistant. Please first :blue[**select a documentation**] from the sidebar dropdown, and then ask me anything from :blue[**that documentation**].",
             )
-
         st.session_state.messages = []
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
-            if message["role"] == "user":
-                st.write(message["content"])
-            else:
-                st.write(message["content"])
+            st.write(message["content"])
 
     if prompt := st.chat_input("Ask question:"):
         if not option:
@@ -92,7 +74,6 @@ def render_chat_ui(option):
             return
 
         st.session_state.messages.append({"role": "user", "content": prompt})
-
         with st.chat_message("user"):
             st.write(prompt)
 
@@ -100,7 +81,6 @@ def render_chat_ui(option):
             with st.spinner("Generating response...", show_time=True):
                 stream = fetch_response(prompt, option, st.session_state.messages)
                 response_text = str(st.write_stream(stream, cursor="|"))
-
                 st.session_state.messages.append(
-                    {"role": "assistant", "content": response_text}
+                    {"role": "assistant", "content": response_text},
                 )

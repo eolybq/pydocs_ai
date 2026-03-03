@@ -16,9 +16,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
-COPY --chown=user requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --chown=user requirements_streamlit.txt .
+RUN pip install --no-cache-dir -r requirements_streamlit.txt
 
-COPY --chown=user src .
+COPY --chown=user streamlit/main.py .
+COPY --chown=user streamlit/frontend/ frontend/
 
-CMD ["uvicorn", "main:api", "--host", "0.0.0.0", "--port", "7860", "--workers", "2"]
+CMD ["streamlit", "run", "main.py", "--server.port=7860", "--server.address=0.0.0.0"]

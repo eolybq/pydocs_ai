@@ -5,7 +5,7 @@ def render_db_error():
     st.error("🔌 Database Connection Error")
     st.info("The database is currently unavailable. Please try again in a few minutes.")
     st.info(
-        "**Error Context:** Could not fetch raw data from `PostreSQL` remote Database."
+        "**Error Context:** Could not fetch raw data from `PostreSQL` remote Database.",
     )
     if st.button("Retry"):
         st.rerun()
