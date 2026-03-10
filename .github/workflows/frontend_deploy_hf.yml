@@ -2,10 +2,8 @@ name: FRONTEND-Hugging Face Hub Deployment
 
 on:
   push:
-    branches: [main] 
-    paths:
-      - 'streamlit/**'
-      - 'requirements_streamlit.txt'
+    tags:
+      - 'v*'
 
   workflow_dispatch:
 
@@ -14,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 

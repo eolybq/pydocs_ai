@@ -41,7 +41,7 @@ def get_chunk(
 
 def get_chunks_list(path: str) -> list[Chunk]:
     files_list = []
-    base_path = Path("data") / path
+    base_path = Path("data/docs") / path
     for file in sorted(base_path.rglob("*.html")):
         if str(file.name) not in (
             "index.html",
